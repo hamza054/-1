@@ -24,7 +24,7 @@ function validate(){
 /*add note to screen */
 function newNote() {
     var note = new Note(document.getElementById("myInput").value, document.getElementById('realDate').value);
-
+    console.log(note);
     if(validate(note)) {
         writeNotee(note);
         store().addStorge(note);
@@ -41,12 +41,14 @@ function writeNotee(note) {
     var noteScreen = document.createElement('div');
     noteScreen.className = 'test';
     noteScreen.innerHTML = '<br>' + write + '<br>' + date + '<br>' + '<br>';
-    
+    var trash = document.createElement('button');
+    trash.className = 'glyphicon glyphicon-trash';
     var bigNote = document.getElementById('bigdiv');
+    noteScreen.appendChild(trash);
     bigNote.appendChild(noteScreen);
-    noteScreen.addEventListener('click', function (){
+    trash.addEventListener('click', function (){
         var tempNotes;
-        noteScreen.parentNode.removeChild(noteScreen);
+        this.parentNode.remove(noteScreen);
         tempNotes = store().getStorage();
         for( var i = 0; i<tempNotes.length; i++) {
             if (tempNotes[i].date === note.date && tempNotes[i].text=== note.text) {
@@ -58,7 +60,7 @@ function writeNotee(note) {
 }
 
 var store = function (){
-    function addToLocalStorge(n) {
+    function addToLocalStorge(note) {
         var storedTasks = JSON.parse(localStorage.getItem("tasks"));
         if (storedTasks == null){
             storedTasks = [];
@@ -70,7 +72,7 @@ var store = function (){
             'date': date
         };
         localStorage.setItem("task",JSON.stringify(task1));
-        storedTasks.push(task1);
+        storedTasks.push(note);
         localStorage.setItem('tasks', JSON.stringify(storedTasks));
     }
 
